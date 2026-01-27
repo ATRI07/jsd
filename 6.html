@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>may</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft Yahei", sans-serif;
+    }
+    body {
+      height: 100vh;
+      /* 本地相对路径背景图（同文件夹下bg.jpg）+ 清晰化配置 */
+      background: url("819198846685f69555224e05c3fe17f2_1751103490767_super.png") no-repeat center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      position: relative;
+      color: #fff;
+      overflow: hidden;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.05); /* 降低遮罩，背景更清晰 */
+      backdrop-filter: blur(0px); /* 关闭模糊，保证背景清晰 */
+      z-index: 0;
+    }
+    /* 核心布局：全屏居中 */
+    .container {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    /* 个人信息区 - 页面正中央 */
+    .profile {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      /* 本地相对路径头像（同文件夹下avatar.jpg） */
+      background: url("f2756e02fab9a48cb3b37de720a47a45.jpg") no-repeat center / cover;
+      margin: 0 auto;
+      transition: transform 0.3s ease;
+    }
+    .avatar:hover {
+      transform: scale(1.05);
+    }
+    /* 昵称：静态彩虹渐变+发光+描边（清晰显示） */
+    .nickname {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #9d4edd, #ff9a8b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+      -webkit-text-stroke: 0.3px #000; /* 描边增强对比度 */
+    }
+    /* 个性简介：静态浅蓝渐变+描边 */
+    .bio {
+      margin-top: 0.6rem;
+      font-size: 1rem;
+      opacity: 0.9;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.2px #000;
+    }
+    .social-buttons {
+      margin-top: 1.2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .social-buttons i {
+      font-size: 1.4rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+      /* 社交图标静态渐变 */
+      background: linear-gradient(90deg, #ff9a00, #ff5e62);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .social-buttons i:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+    /* 名言区（随机个性签名） */
+    .quote {
+      text-align: center;
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+    /* 个性签名：静态蓝紫渐变+描边 */
+    .quote-text {
+      font-size: 1.5rem;
+      line-height: 1.8;
+      margin-bottom: 0.8rem;
+      transition: opacity 0.5s ease;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.3px #000;
+    }
+    /* 签名作者：静态浅绿渐变+描边 */
+    .quote-author {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.2px #000;
+    }
+    /* 时间天气区 - 惠州地址 */
+    .time-weather {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      text-align: right;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      /* 时间天气文字：静态橙红渐变+描边 */
+      background: linear-gradient(90deg, #ff9a00, #ff5e62);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.2px #000;
+    }
+    .date {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    .time {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0.2rem 0;
+    }
+    .weather {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+    /* 快捷方式区 - 优化交互+清晰文字 */
+    .shortcuts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      max-width: 500px;
+      margin-top: 1rem;
+    }
+    .shortcut-btn {
+      padding: 0.8rem 1.2rem;
+      background: rgba(0, 0, 0, 0.3); /* 加深底色，文字更清晰 */
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      /* 快捷按钮文字：静态青蓝渐变+描边 */
+      background: linear-gradient(90deg, #00c9ff, #92fe9d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.3px #000;
+    }
+    .shortcut-btn:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      /* hover静态渐变反转 */
+      background: linear-gradient(90deg, #92fe9d, #00c9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    /* 底部版权：静态浅紫渐变+描边+底色 */
+    .footer {
+      position: absolute;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.9;
+      background: rgba(0, 0, 0, 0.2); /* 加底色，避免文字消失 */
+      padding: 0.3rem;
+      /* 版权文字渐变+描边 */
+      background: linear-gradient(90deg, #d4fc79, #96e6a1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.2px #000;
+    }
+    /* 加载提示 */
+    .loading {
+      font-style: italic;
+      opacity: 0.6;
+    }
+    /* 适配移动端 */
+    @media (max-width: 768px) {
+      .time-weather {
+        position: static;
+        margin-bottom: 1rem;
+        text-align: center;
+        width: 100%;
+      }
+      .shortcuts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+      }
+      .quote-text {
+        font-size: 1.2rem;
+      }
+      .time {
+        font-size: 1.6rem;
+      }
+      body {
+        background-attachment: scroll; /* 移动端背景兼容 */
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- 时间天气（固定右上角，地址改为惠州市） -->
+    <div class="time-weather">
+      <div class="date">2024年 5月 8日 星期三</div>
+      <div class="time">18:46:10</div>
+      <div class="weather loading">正在获取天气...</div>
+    </div>
+
+    <!-- 个人信息（页面正中央） -->
+    <div class="profile">
+      <div class="avatar"></div>
+      <div class="nickname">冰轮月语</div>
+      <div class="bio">Hello World! <br> Gal爱好中者 | +V: blyy0d00</div>
+      <div class="social-buttons">
+        <i class="fas fa-sync-alt" id="refresh-quote" title="更换签名"></i>
+        <i class="fas fa-bell" id="notify-btn" title="消息通知"></i>
+        <i class="fas fa-envelope" id="email-btn" title="联系我"></i>
+        <i class="fas fa-cog" id="setting-btn" title="设置"></i>
+        <i class="fas fa-share-alt" id="share-btn" title="分享"></i>
+      </div>
+    </div>
+
+    <!-- 随机个性签名 -->
+    <div class="quote">
+      <p class="quote-text" id="random-quote">我手起刀落的时候，也会有这样的微醺感呢。</p>
+      <p class="quote-author" id="quote-author">「 子安 」</p>
+    </div>
+
+    <!-- 快捷方式 -->
+    <div class="shortcuts">
+      <div class="shortcut-btn" data-link="https://www.csdn.net" title="CSDN技术社区">
+        <i class="fas fa-link"></i> CSDN
+      </div>
+      <div class="shortcut-btn" data-link="https://pan.baidu.com" title="百度网盘">
+        <i class="fas fa-cloud"></i> 百度网盘
+      </div>
+      <div class="shortcut-btn" data-link="https://music.163.com" title="网易云音乐">
+        <i class="fas fa-music"></i> 网易云音乐
+      </div>
+      <div class="shortcut-btn" data-link="https://www.bing.com" title="必应搜索">
+        <i class="fas fa-search"></i> Bing
+      </div>
+      <div class="shortcut-btn" data-link="https://openai.com" title="OpenAI">
+        <i class="fas fa-robot"></i> OpenAI
+      </div>
+      <div class="shortcut-btn" data-link="https://mirrorpi.com" title="Mirror-pi">
+        <i class="fas fa-flask"></i> Mirror-pi
+      </div>
+    </div>
+
+    <!-- 底部版权 -->
+    <div class="footer">
+        © 2026 冰轮月语
+  </div>
+
+  <script>
+    // 1. 实时时间和日期功能
+    function updateDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2, '0');
+      const day = now.getDate().toString().padStart(2, '0');
+      const week = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+
+      document.querySelector('.date').textContent = 
+        `${year}年 ${month}月 ${day}日 星期${week}`;
+      document.querySelector('.time').textContent = 
+        `${hours}:${minutes}:${seconds}`;
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // 2. 实时获取惠州天气
+    async function getHuizhouWeather() {
+      const weatherEl = document.querySelector('.weather');
+      try {
+        const response = await fetch('https://wttr.in/惠州?format=3');
+        if (!response.ok) throw new Error('天气接口请求失败');
+        
+        const weatherText = await response.text();
+        const [city, weatherInfo] = weatherText.split(': ');
+        weatherEl.textContent = `${city} ${weatherInfo}`;
+        weatherEl.classList.remove('loading');
+      } catch (error) {
+        console.error('获取天气失败:', error);
+        weatherEl.textContent = '惠州市 阴 28℃ 东北风3级';
+        weatherEl.classList.remove('loading');
+      }
+    }
+    getHuizhouWeather();
+    setInterval(getHuizhouWeather, 30 * 60 * 1000);
+
+    // 3. 不重复的随机个性签名
+    const quoteList = [
+      { text: "我手起刀落的时候，也会有这样的微醺感呢。", author: "「 子安 」" },
+      { text: "保持热爱，奔赴山海。", author: "「 无名 」" },
+      { text: "人生如逆旅，我亦是行人。", author: "「 苏轼 」" },
+      { text: "代码的世界里，没有解决不了的问题。", author: "「 程序员 」" },
+      { text: "愿你遍历山河，觉得人间值得。", author: "「 宫崎骏 」" },
+      { text: "慢慢来，谁还没有一个努力的过程。", author: "「 无名 」" },
+      { text: "技术改变世界，热爱永不褪色。", author: "「 无名 」" }
+    ];
+    
+    let usedIndexes = [];
+    let remainingQuotes = [...quoteList];
+
+    function setRandomQuote() {
+      const quoteTextEl = document.getElementById('random-quote');
+      const quoteAuthorEl = document.getElementById('quote-author');
+      
+      quoteTextEl.style.opacity = 0;
+      quoteAuthorEl.style.opacity = 0;
+      
+      setTimeout(() => {
+        if (remainingQuotes.length === 0) {
+          remainingQuotes = [...quoteList];
+          usedIndexes = [];
+        }
+        
+        const randomIndex = Math.floor(Math.random() * remainingQuotes.length);
+        const selectedQuote = remainingQuotes[randomIndex];
+        
+        quoteTextEl.textContent = selectedQuote.text;
+        quoteAuthorEl.textContent = selectedQuote.author;
+        
+        remainingQuotes.splice(randomIndex, 1);
+        usedIndexes.push(randomIndex);
+        
+        quoteTextEl.style.opacity = 1;
+        quoteAuthorEl.style.opacity = 1;
+      }, 300);
+    }
+
+    setRandomQuote();
+    document.getElementById('refresh-quote').addEventListener('click', setRandomQuote);
+
+    // 4. 按钮跳转功能
+    const socialButtons = {
+      'notify-btn': 'javascript:alert("消息通知功能待开发～")',
+      'email-btn': 'mailto:Echocent@example.com',
+      'setting-btn': 'javascript:alert("设置页面待开发～")',
+      'share-btn': 'javascript:{\
+        if (navigator.share) {\
+          navigator.share({\
+            title: "冰轮月语的个人主页",\
+            url: window.location.href\
+          }).catch(err => console.log("分享失败:", err));\
+        } else {\
+          alert("你的浏览器不支持分享功能，可手动复制链接：" + window.location.href);\
+        }\
+      }'
+    };
+
+    Object.keys(socialButtons).forEach(btnId => {
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.addEventListener('click', function() {
+          try {
+            const target = socialButtons[btnId];
+            if (target.startsWith('javascript:')) {
+              eval(target.replace('javascript:', ''));
+            } else {
+              window.open(target, '_blank');
+            }
+          } catch (error) {
+            alert('操作失败：' + error.message);
+          }
+        });
+      }
+    });
+
+    // 快捷方式按钮跳转
+    const shortcutBtns = document.querySelectorAll('.shortcut-btn');
+    shortcutBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        try {
+          const link = this.getAttribute('data-link');
+          if (link && link.trim() !== '') {
+            window.open(link, '_blank');
+          } else {
+            alert('链接为空，请检查配置！');
+          }
+        } catch (error) {
+          alert('跳转失败：' + error.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
